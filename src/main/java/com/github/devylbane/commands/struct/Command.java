@@ -34,10 +34,7 @@ public abstract class Command implements ICommand
     });
 
     /**
-     * The method that we use in our commands for replying success if we want to reply success.
-     * @param event   the event that triggered the command execution.
-     * @param message the message that we want to reply, we parse {@code null} if we do not want to reply a message.
-     * @param millis  the time we wait before we delete our replied message, we parse {@code -1L} if we do not want to delete it.
+     * @see Command#reply(GuildMessageReceivedEvent, String, String, long)
      */
     public void replySuccess(final GuildMessageReceivedEvent event, final String message, final long millis)
     {
@@ -55,10 +52,7 @@ public abstract class Command implements ICommand
     }
 
     /**
-     * The method that we use in our commands for replying success if we want to reply success.
-     * @param event   the event that triggered the command execution.
-     * @param message the message that we want to reply, we parse {@code null} if we do not want to reply a message.
-     * @param millis  the time we wait before we delete our replied message, we parse {@code -1L} if we do not want to delete it.
+     * @see Command#reply(GuildMessageReceivedEvent, String, String, long)
      */
     public void replyFailure(final GuildMessageReceivedEvent event, final String message, final long millis)
     {
@@ -79,9 +73,9 @@ public abstract class Command implements ICommand
     /**
      * The universal method we use for replying.
      * @param event    the event that triggered command execution.
-     * @param reaction the reaction we want to add.
-     * @param message  the message we want to reply.
-     * @param millis   the time we wait before we delete the sent message.
+     * @param reaction the reaction we want to add. {@code null} prohibits reacting to the received message
+     * @param message  the message we want to reply. {@code null} prevents us from sending a reply.
+     * @param millis   the time we wait before we delete the sent message. {@code -1L} avoids deleting our reply.
      */
     public void reply(final GuildMessageReceivedEvent event, final String reaction, final String message, final long millis)
     {

@@ -37,14 +37,22 @@ public interface ICommand
 
     /**
      *
-     * @return the command name
+     * @return the commands name
      */
     @Nonnull
     String getName();
 
+    /**
+     *
+     * @return the count of required args
+     */
     @Nonnegative
     int getRequiredArguments();
 
+    /**
+     *
+     * @return the count of max args
+     */
     @Nonnegative
     int getMaximumArguments();
 }
