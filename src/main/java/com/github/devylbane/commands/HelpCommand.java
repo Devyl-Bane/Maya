@@ -59,7 +59,7 @@ public class HelpCommand extends Command
     @Override
     public String getHelp()
     {
-        return "help";
+        return "Returns the help for each or a single command";
     }
 
     @Nonnull
