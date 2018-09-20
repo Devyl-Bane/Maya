@@ -1,7 +1,9 @@
 package com.github.devylbane.commands.struct;
 
 import com.github.devylbane.Emojis;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.ErrorResponseException;
 import net.dv8tion.jda.core.requests.ErrorResponse;
@@ -74,10 +76,10 @@ public abstract class Command implements ICommand
      * The universal method we use for replying.
      * @param event    the event that triggered command execution.
      * @param reaction the reaction we want to add. {@code null} prohibits reacting to the received message
-     * @param message  the message we want to reply. {@code null} prevents us from sending a reply.
+     * @param messages  the messages we want to reply. {@code null} prevents us from sending a reply.
      * @param millis   the time we wait before we delete the sent message. {@code -1L} avoids deleting our reply.
      */
-    public void reply(final GuildMessageReceivedEvent event, final String reaction, final String message, final long millis)
+    protected void reply(final GuildMessageReceivedEvent event, final String reaction, final long millis, final Message... messages)
     {
         if (event == null)
             return;
@@ -88,21 +90,33 @@ public abstract class Command implements ICommand
         if (reaction != null && !reaction.isEmpty() && !Helpers.isBlank(reaction))
             event.getMessage().addReaction(reaction).queue(null, FAIL_CONSUMER);
 
-        if (message == null || message.isEmpty() || Helpers.isBlank(message))
+        if (messages == null || messages.length == 0)
             return;
 
         if (millis == -1)
-            event.getChannel().sendMessage(message).queue();
+            for (Message msg : messages) {
+                event.getChannel().sendMessage(msg).queue();
+            }
         else
-            event.getChannel().sendMessage(message).queue((sentMessage) ->
-            {
-                sentMessage.delete().queueAfter(millis, TimeUnit.MILLISECONDS);
-            }, FAIL_CONSUMER);
+            for (Message message : messages) {
+                event.getChannel().sendMessage(message).queue((sentMessage) ->
+                        sentMessage.delete().queueAfter(millis, TimeUnit.MILLISECONDS), FAIL_CONSUMER);
+            }
+    }
+
+    public void reply(final GuildMessageReceivedEvent event, final String reaction, final String message, final long millis)
+    {
+        reply(event, reaction, millis, new MessageBuilder(message).build());
     }
 
     protected void reply(final GuildMessageReceivedEvent event, final String message, final long millis)
     {
         reply(event, null, message, millis);
+    }
+
+    protected void reply(final GuildMessageReceivedEvent event, final Message... message)
+    {
+        reply(event, null, -1L, message);
     }
 
     protected void reply(final GuildMessageReceivedEvent event, final String message)

@@ -1,6 +1,8 @@
 package com.github.devylbane.commands.handlers;
 
 import com.github.devylbane.Config;
+import com.github.devylbane.commands.GreetCommand;
+import com.github.devylbane.commands.HelpCommand;
 import com.github.devylbane.commands.PingCommand;
 import com.github.devylbane.commands.struct.Command;
 import com.github.devylbane.commands.struct.ICommand;
@@ -27,7 +29,7 @@ public class CommandManager extends ListenerAdapter {
         }
 
         // Advanced contains check so we have no duplicated names nor aliases
-        public boolean contains(ICommand o) {
+        boolean contains(ICommand o) {
             List<String> names = this.stream().map(ICommand::getName).collect(Collectors.toList());
             List<String[]> aliases = this.stream().map(ICommand::getAliases).collect(Collectors.toList());
 
@@ -50,6 +52,8 @@ public class CommandManager extends ListenerAdapter {
     };
 
     public CommandManager() {
+        commands.add(new GreetCommand());
+        commands.add(new HelpCommand());
         commands.add(new PingCommand());
     }
 
@@ -80,7 +84,7 @@ public class CommandManager extends ListenerAdapter {
 
         if (cmd.getRequiredArguments() > 0 && split.length == 1)
         {
-            cmd.replyFailure(event, String.format("Missing arguments! Required syntax %s requires at least %d arguments and max. %d arguments.",
+            cmd.replyFailure(event, String.format("Missing arguments! Required syntax `%s` requires at least %d arguments and max. %d arguments.",
                     cmd.getSyntax(), cmd.getRequiredArguments(), cmd.getMaximumArguments()), 15000L);
             return;
         }
@@ -103,7 +107,12 @@ public class CommandManager extends ListenerAdapter {
                 event.getJDA().getSelfUser(), event.getGuildAvailableCount(), event.getGuildUnavailableCount());
     }
 
-    private ICommand findCommand(String invoke)
+    public List<ICommand> getCommands()
+    {
+        return commands;
+    }
+
+    public ICommand findCommand(String invoke)
     {
         Optional<ICommand> icmd = commands.stream().filter((cmd) -> cmd.getName().equalsIgnoreCase(invoke)).findFirst();
 

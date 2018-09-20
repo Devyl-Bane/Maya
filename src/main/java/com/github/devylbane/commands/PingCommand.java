@@ -37,14 +37,4 @@ public class PingCommand extends Command
     public String getName() {
         return "ping";
     }
-
-    @Override
-    public int getRequiredArguments() {
-        return 0;
-    }
-
-    @Override
-    public int getMaximumArguments() {
-        return 0;
-    }
 }

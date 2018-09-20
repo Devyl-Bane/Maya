@@ -47,12 +47,18 @@ public interface ICommand
      * @return the count of required args
      */
     @Nonnegative
-    int getRequiredArguments();
+    default int getRequiredArguments()
+    {
+        return 0;
+    }
 
     /**
      *
      * @return the count of max args
      */
     @Nonnegative
-    int getMaximumArguments();
+    default int getMaximumArguments()
+    {
+        return 0;
+    }
 }
